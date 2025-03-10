@@ -16,7 +16,6 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name = "departments")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Department implements Serializable {
     @Id
     @Column(name = "dept_no", nullable = false, length = 4)

@@ -1,6 +1,8 @@
 package com.tj703.l08_spring_jpa_rest.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +10,7 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -16,7 +19,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dept_emp")
 @IdClass(DeptEmpId.class)
-public class DeptEmp {
+public class DeptEmp implements Serializable {
     @Id
     @Column(name = "emp_no", nullable = false)
     private Integer empNo;

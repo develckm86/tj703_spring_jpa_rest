@@ -13,8 +13,8 @@ import java.util.List;
 public class DeptServiceImp implements DeptService {
     private final DeptEmpRepository deptEmpRepository;
     @Override
-    //@Transactional
     public List<DeptEmp> readByEmpNo(int empNo) {
+
         return deptEmpRepository.findByEmpNo(empNo);
     }
 }

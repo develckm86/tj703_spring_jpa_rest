@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface DeptEmpRepository extends JpaRepository<DeptEmp, DeptEmpId> {
-    @EntityGraph(attributePaths = "dept")
+    //@EntityGraph(attributePaths = "dept")
     List<DeptEmp> findByEmpNo(int empNo);
     //lazy 조회할때 프록시객체를 json 으로 변환하는 문제
 }
