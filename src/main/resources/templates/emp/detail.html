@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사원상세</title>
+</head>
+<body>
+    <h1>사원 상세</h1>
+    <p>
+        id:<span th:text="${emp.id}"></span>
+    </p>
+    <p>
+        firstName: <span th:text="${emp.firstName}"></span>
+    </p>
+    <p>
+        lastName: <span th:text="${emp.lastName}"></span>
+    </p>
+    <p>
+        birthDate: <span th:text="${emp.birthDate}"></span>
+    </p>
+    <p>
+        hireDate: <span th:text="${emp.hireDate}"></span>
+    </p>
+    <p>
+        gender: <span th:text="${emp.gender}"></span>
+    </p>
+<!--    <p th:text="${emp.deptEmps}"></p>-->
+    <hr>
+    <div>
+        <h2>부서이동내역
+            <button id="loadDeptBtn">불러오기</button>
+        </h2>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>사원 id</th>
+                        <th>부서 번호</th>
+                        <th>부서 이름</th>
+                        <th>from date</th>
+                        <th>to date</th>
+                    </tr>
+                </thead>
+                <tbody id="deptTbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const EMP_NO=[[${emp.id}]]
+        const loadDeptBtn=document.getElementById("loadDeptBtn");
+        const deptTbody=document.getElementById("deptTbody");
+
+        //function loadDept() {}
+        const loadDept=async function (){
+            //deptEmp
+            let url =`/dept/${EMP_NO}/readEmp.do`;
+            let response=await fetch(url); //비동기 함수
+            let data=await response.json();
+            console.log(data);
+            let html="";
+            for(let deptEmp of data){
+                html+=`<tr>
+                           <td>${deptEmp.empNo}</td>
+                           <td>${deptEmp.deptNo}</td>
+                           <td>${deptEmp.dept.deptName}</td>
+                           <td>${deptEmp.fromDate}</td>
+                           <td>${deptEmp.toDate}</td>
+                        </tr>`;
+            }
+            deptTbody.innerHTML=html;
+
+        };
+        //loadDeptBtn.onclick=loadDept;
+        loadDeptBtn.addEventListener("click",loadDept);
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: l08_spring_jpa_rest
+
+  profiles:
+    include: dev_db
