@@ -28,13 +28,13 @@ public class DeptEmp {//사원의 부서이동 내역
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "emp_no", nullable = false)
+    @JoinColumn(name = "emp_no", insertable = false, updatable = false)
     private Employee emp;
 
     //@JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "dept_no" )
+    @JoinColumn(name = "dept_no",insertable = false, updatable = false )
     private Department dept;
 
 

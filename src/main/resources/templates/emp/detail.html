@@ -26,10 +26,23 @@
     </p>
 <!--    <p th:text="${emp.deptEmps}"></p>-->
     <hr>
+    <style>
+        .disabled{display: none;}
+    </style>
     <div>
         <h2>부서이동내역
             <button id="loadDeptBtn">불러오기</button>
+            <button id="showDeptRegisterBtn">부서 등록 폼 보기</button>
         </h2>
+        <hr>
+        <h3>부서 등록 폼</h3>
+        <form id="deptRegister" class="disabled" action="/dept/register.do" method="post">
+            <p><label>사원번호<input name="empNo" th:value="${emp.id}" type="text" readonly></label></p>
+            <p><label>부서번호<input name="deptNo" value="d00" type="text"></label></p>
+            <p><label>from-date<input name="fromDate" value="2024-01-01" type="date"></label></p>
+            <p><label>to-date<input name="toDate" value="2025-01-01" type="date"></label></p>
+            <p><button type="reset">초기화</button>  <button type="submit">등록</button></p>
+        </form>
         <div>
             <table>
                 <thead>
@@ -45,10 +58,53 @@
             </table>
         </div>
     </div>
+    <br><br><br><br><br><br><br><br><br><br>
     <script>
         const EMP_NO=[[${emp.id}]]
         const loadDeptBtn=document.getElementById("loadDeptBtn");
         const deptTbody=document.getElementById("deptTbody");
+        const deptRegister=document.getElementById("deptRegister"); //form
+        const showDeptRegisterBtn=document.getElementById("showDeptRegisterBtn");
+
+        showDeptRegisterBtn.addEventListener("click",()=>{
+            deptRegister.classList.toggle("disabled");
+        });
+
+        deptRegister.addEventListener("submit",async (e)=>{
+            e.preventDefault(); //서비밋 입벤트 막기
+            const formData=new FormData(deptRegister); //FormData  form 의 input 데이터를 한꺼번에 처리
+            //Map(key-value) -> [key, value] (entry data) {id:"경민",age:39}=? ["id","경민"] ["age",39]
+            // for(let input of formData.entries()){
+            //     console.log(input);
+            // }
+            const formDataObj=Object.fromEntries(formData.entries());
+            //Object.fromEntries : entry 데이터로 Object 생성
+            console.log(formDataObj);
+            console.log(JSON.stringify(formDataObj));
+            //body : 요청 정보를 포함하는 해더의 본문
+            //headers : 요청 정보에 대한 정보(meta data)
+            /*
+            * {empNo: '11', deptNo: 'd00', fromDate: '2024-01-01', toDate: '2025-01-01'} :
+            * Object 의 리터럴 표기법
+            * {"empNo":"11","deptNo":"d00","fromDate":"2024-01-01","toDate":"2025-01-01"} :
+            * JSON : Object 문자열 명세 (NaN,함수가 포함되지 않음,key 와 문자열은 ""로 표시)
+            */
+            const response=await fetch("/dept/deptEmp.do",{
+                method:"POST",
+                body:JSON.stringify(formDataObj),
+                headers :{ "Content-type" : "application/json"},
+            });
+            const resultObj=await response.json();
+            console.log(resultObj);
+            if(resultObj.result===true){
+                alert(resultObj.msg);
+                await loadDept(); //async 할수를 실행할때는 await 를 사용해야한다.
+            }else{
+                alert("등록할 부서가 없습니다.");
+            }
+
+        });
+
 
         //function loadDept() {}
         const loadDept=async function (){
