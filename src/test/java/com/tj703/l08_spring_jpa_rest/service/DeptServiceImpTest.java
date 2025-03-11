@@ -30,4 +30,25 @@ class DeptServiceImpTest {
         deptEmpId.setDeptNo("d003");
         deptService.remove(deptEmpId);
     }
+
+    @Test
+    void register() {
+        DeptEmp deptEmp = new DeptEmp();
+        deptEmp.setEmpNo(10001);
+        deptEmp.setDeptNo("d005");
+        deptEmp.setFromDate(LocalDate.parse("2024-02-01"));
+        deptEmp.setToDate(LocalDate.parse("2024-04-01"));
+        System.out.println(deptService.register(deptEmp));
+
+    }
+
+    @Test
+    void modify() {
+        DeptEmp deptEmp = new DeptEmp();
+        deptEmp.setEmpNo(10001);
+        deptEmp.setDeptNo("d003");
+        deptEmp.setFromDate(LocalDate.parse("2024-02-01"));
+        deptEmp.setToDate(LocalDate.parse("2024-06-01"));
+        deptService.modify(deptEmp);
+    }
 }

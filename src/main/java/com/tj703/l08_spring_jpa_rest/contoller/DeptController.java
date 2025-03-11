@@ -5,11 +5,14 @@ import com.tj703.l08_spring_jpa_rest.service.DeptService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,23 +35,19 @@ public class DeptController {
     }
     @PostMapping("/deptEmp.do")
     @ResponseBody
-    public Map<String, Object> deptEmpRegister(@RequestBody DeptEmp deptEmp){
-        //@ModelAttribute : 쿼리스트링을 객체로 파싱
-        //@RequestBody : json을 객체로 파싱
-        boolean result = true;
-        Map<String,Object> resultMap=new HashMap<>();
-        //System.out.println(deptEmp);
+    public ResponseEntity<DeptEmp> deptEmpRegister(@RequestBody DeptEmp deptEmp){
         try {
             DeptEmp dept=deptService.save(deptEmp);
-            resultMap.put("deptEmp",dept);
-        } catch (Exception e) {
-            resultMap.put("errorMsg",e.getMessage());
-            result = false;
+            //201 저장 성공
+            return ResponseEntity.status(201).body(dept);
+        }catch (IllegalArgumentException e){ //객체 상태에 따른 진행 불가 오류
+            return ResponseEntity.status(407).body(null); //409 : 요청 충돌(요청한 데이터가 이미 있으니 충돌)
+        } catch (DataIntegrityViolationException e) { //참조할 데이터가 없을때  발생하는 오류
+            //507: 저장 실패
+            return ResponseEntity.status(507).body(null);
+        }catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
-        resultMap.put("msg","성공");
-        resultMap.put("result",result);
-
-        return resultMap;
     }
 
 
