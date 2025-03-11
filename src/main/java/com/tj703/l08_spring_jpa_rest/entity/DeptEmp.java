@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dept_emp")
 @IdClass(DeptEmpId.class)
-public class DeptEmp {
+public class DeptEmp {//사원의 부서이동 내역
     @Id
     @Column(name = "emp_no", nullable = false)
     private Integer empNo;
