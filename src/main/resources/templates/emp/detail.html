@@ -52,6 +52,8 @@
                         <th>부서 이름</th>
                         <th>from date</th>
                         <th>to date</th>
+                        <th>수정</th>
+                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody id="deptTbody"></tbody>
@@ -65,6 +67,16 @@
         const deptTbody=document.getElementById("deptTbody");
         const deptRegister=document.getElementById("deptRegister"); //form
         const showDeptRegisterBtn=document.getElementById("showDeptRegisterBtn");
+        const httpStatusMsg={
+            200: "성공",
+            201: "저장 성공",
+            400: "잘못된 요청",
+            404: "리소스가 없습니다.",
+            409: "이미 리소스가 존재합니다. 저장실패!",
+            500: "서버에 문제가 발생했습니다. 다시시도하세요.",
+            507: "잘못된 리소스를 참조했습니다. 저장 실패!"
+        }
+
 
         showDeptRegisterBtn.addEventListener("click",()=>{
             deptRegister.classList.toggle("disabled");
@@ -94,14 +106,10 @@
                 body:JSON.stringify(formDataObj),
                 headers :{ "Content-type" : "application/json"},
             });
-            const resultObj=await response.json();
-            console.log(resultObj);
-            if(resultObj.result===true){
-                alert(resultObj.msg);
-                await loadDept(); //async 할수를 실행할때는 await 를 사용해야한다.
-            }else{
-                alert("등록할 부서가 없습니다.");
+            if(response.status===201){
+                await loadDept();
             }
+            alert(httpStatusMsg[response.status]);
 
         });
 
@@ -121,6 +129,8 @@
                            <td>${deptEmp.dept.deptName}</td>
                            <td>${deptEmp.fromDate}</td>
                            <td>${deptEmp.toDate}</td>
+                           <td><button onclick="deptEmpModifyHandler(event,${deptEmp.empNo},'${deptEmp.deptNo}')">수정</button></td>
+                           <td><button onclick="deptEmpRemoveHandler(event,${deptEmp.empNo},'${deptEmp.deptNo}')" >삭제</button></td>
                         </tr>`;
             }
             deptTbody.innerHTML=html;
@@ -128,6 +138,18 @@
         };
         //loadDeptBtn.onclick=loadDept;
         loadDeptBtn.addEventListener("click",loadDept);
+        //1. btn.onclick=deptEmpRemoveHandler; //btn의 클릭을 콜백함수로 바꾸겠다.
+        //2. btn.onclick=(event)=>{
+        //     deptEmpRemoveHandler(event);
+        // }//btn의 클릭을 화살표함수로 바꿀건데 내부적으로 콜백함수를 실행한다.
+
+        const deptEmpRemoveHandler=(e,empNo,deptNo)=>{
+            console.log(empNo,deptNo);
+        }
+        const deptEmpModifyHandler=(e,empNo,deptNo)=>{
+            console.log(empNo,deptNo);
+        }
+
     </script>
 </body>
 </html>
