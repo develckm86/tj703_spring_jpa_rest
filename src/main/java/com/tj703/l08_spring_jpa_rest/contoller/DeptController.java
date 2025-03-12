@@ -1,11 +1,14 @@
 package com.tj703.l08_spring_jpa_rest.contoller;
 
 import com.tj703.l08_spring_jpa_rest.entity.DeptEmp;
+import com.tj703.l08_spring_jpa_rest.entity.DeptEmpId;
 import com.tj703.l08_spring_jpa_rest.service.DeptService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,8 +54,25 @@ public class DeptController {
             return ResponseEntity.status(500).body(null); //예상하지 못한 오류
         }
     }
-
-
+    //GET:리소스 주세요, POST: 리소스 저장 (동기식 통신에서 가능)
+    //DELETE :리소스 삭제해 주세요
+    //PUT
+    //FETCH
+    @DeleteMapping("/deptEmp.do")
+    public ResponseEntity<Void> removeDeptEmp(@RequestBody DeptEmpId deptEmpId) {
+        logger.info(deptEmpId.getEmpNo().toString() );
+        logger.info(deptEmpId.getDeptNo());
+        try {
+            deptService.remove(deptEmpId);
+            //202 : 비동기식으로 데이터가 처리되었습니다. : =>데이터가 비동기식으로 삭제됨
+            return ResponseEntity.status(202).build(); //build() :객체를 생성 (빌더패턴)
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(404).build();
+            //404 : 동적리소스,db 리소스가 없는 것
+        }catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 
 
 

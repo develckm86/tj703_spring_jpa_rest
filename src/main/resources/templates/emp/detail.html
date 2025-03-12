@@ -70,6 +70,7 @@
         const httpStatusMsg={
             200: "성공",
             201: "저장 성공",
+            202: "삭제 성공",
             400: "잘못된 요청",
             404: "리소스가 없습니다.",
             409: "이미 리소스가 존재합니다. 저장실패!",
@@ -143,8 +144,21 @@
         //     deptEmpRemoveHandler(event);
         // }//btn의 클릭을 화살표함수로 바꿀건데 내부적으로 콜백함수를 실행한다.
 
-        const deptEmpRemoveHandler=(e,empNo,deptNo)=>{
-            console.log(empNo,deptNo);
+        const deptEmpRemoveHandler=async (e,empNo,deptNo)=>{
+            const deptEmpId={
+                empNo:empNo,
+                deptNo:deptNo
+            }
+            let deptEmpIdJson=JSON.stringify(deptEmpId);
+            const resp=await fetch("/dept/deptEmp.do",{
+                method:"DELETE",
+                headers:{"Content-Type":"application/json"},
+                body:deptEmpIdJson
+            });
+            if(resp.status===202){
+                await loadDept()
+            }
+            alert(httpStatusMsg[resp.status]);
         }
         const deptEmpModifyHandler=(e,empNo,deptNo)=>{
             console.log(empNo,deptNo);

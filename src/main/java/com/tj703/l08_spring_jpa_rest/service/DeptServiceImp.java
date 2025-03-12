@@ -52,6 +52,10 @@ public class DeptServiceImp implements DeptService {
     @Override
     @Transactional
     public void remove(DeptEmpId deptEmpId) {
+        DeptEmp existDeptEmp=entityManager.find(DeptEmp.class, deptEmpId);
+        if(existDeptEmp==null) {
+            throw new IllegalArgumentException("삭제할 리소스가 없습니다.");
+        }
         deptEmpRepository.deleteById(deptEmpId);
     }
 }
