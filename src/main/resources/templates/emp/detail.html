@@ -36,13 +36,24 @@
         </h2>
         <hr>
         <h3>부서 등록 폼</h3>
-        <form id="deptRegister" class="disabled" action="/dept/register.do" method="post">
+        <form id="deptRegister" class="disabled" action="/dept/deptEmp.do" method="post">
             <p><label>사원번호<input name="empNo" th:value="${emp.id}" type="text" readonly></label></p>
             <p><label>부서번호<input name="deptNo" value="d00" type="text"></label></p>
             <p><label>from-date<input name="fromDate" value="2024-01-01" type="date"></label></p>
             <p><label>to-date<input name="toDate" value="2025-01-01" type="date"></label></p>
             <p><button type="reset">초기화</button>  <button type="submit">등록</button></p>
         </form>
+        <hr>
+        <h3>부서 수정 폼</h3>
+        <form id="deptModify" class="disabled" action="/dept/deptEmp.do" method="put">
+            <p><label>사원번호<input name="empNo"  type="text" readonly></label></p>
+            <p><label>부서번호<input name="deptNo"  type="text" readonly></label></p>
+            <p><label>부서이름<input name="dept.deptName"  type="text" readonly></label></p>
+            <p><label>from-date<input name="fromDate"  type="date"></label></p>
+            <p><label>to-date<input name="toDate"  type="date"></label></p>
+            <p><button type="reset">초기화</button>  <button type="submit">수정</button></p>
+        </form>
+
         <div>
             <table>
                 <thead>
@@ -66,6 +77,7 @@
         const loadDeptBtn=document.getElementById("loadDeptBtn");
         const deptTbody=document.getElementById("deptTbody");
         const deptRegister=document.getElementById("deptRegister"); //form
+        const deptModify=document.getElementById("deptModify");
         const showDeptRegisterBtn=document.getElementById("showDeptRegisterBtn");
         const httpStatusMsg={
             200: "성공",
@@ -160,8 +172,21 @@
             }
             alert(httpStatusMsg[resp.status]);
         }
-        const deptEmpModifyHandler=(e,empNo,deptNo)=>{
-            console.log(empNo,deptNo);
+        const deptEmpModifyHandler=async (e,empNo,deptNo)=>{
+            const URL=`/dept/${empNo}/${deptNo}/deptEmp.do`;
+            const response=await fetch(URL);
+            if(response.status===200){
+                deptModify.classList.remove("disabled");
+                const data=await response.json();
+                console.log(data);
+                //form 내부의 input은 form의 필드처럼 name 속성으로 참조 가능
+                deptModify.empNo.value=data.empNo;
+                deptModify.deptNo.value=data.deptNo;
+                deptModify.fromDate.value=data.fromDate;
+                deptModify.toDate.value=data.toDate;
+                deptModify['dept.deptName'].value=data.dept.deptName;
+            }
+
         }
 
     </script>
