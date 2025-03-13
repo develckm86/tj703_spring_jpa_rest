@@ -11,7 +11,7 @@ public interface DeptService {
     List<DeptEmp> readByEmpNo(int empNo);
     //등록 수정 삭제
     void register(DeptEmp deptEmp);
-   // void modify(DeptEmp deptEmp);
+    void modify(DeptEmp deptEmp);
     DeptEmp save(DeptEmp deptEmp);
     void remove(DeptEmpId deptEmpId);
 

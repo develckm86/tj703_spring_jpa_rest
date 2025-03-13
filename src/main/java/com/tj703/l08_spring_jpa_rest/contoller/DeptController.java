@@ -98,6 +98,21 @@ public class DeptController {
 //            return ResponseEntity.status(404).body(null);
 //        }
     }
+    @PutMapping("/deptEmp.do")
+    public ResponseEntity<Void> modifyDeptEmp(
+            @RequestBody DeptEmp deptEmp
+    ){
+        try {
+            deptService.modify(deptEmp);
+            return ResponseEntity.status(204).build();
+            //204(no content) : 성공했는데 줄 수있는 데이터는 없다(보통 수정 성공하고 반환할 데이터가 없을때)
+            //수정하려했는데 없는 데이터가 오면 save 가 등록
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(404).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 
     @PostMapping("/register.do")
     public String register(

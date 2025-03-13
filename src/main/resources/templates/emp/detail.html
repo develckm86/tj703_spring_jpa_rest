@@ -83,6 +83,7 @@
             200: "성공",
             201: "저장 성공",
             202: "삭제 성공",
+            204: "수정 성공",
             400: "잘못된 요청",
             404: "리소스가 없습니다.",
             409: "이미 리소스가 존재합니다. 저장실패!",
@@ -185,9 +186,36 @@
                 deptModify.fromDate.value=data.fromDate;
                 deptModify.toDate.value=data.toDate;
                 deptModify['dept.deptName'].value=data.dept.deptName;
+            }else if (response.status===404){
+                await loadDept();
             }
-
+            alert(httpStatusMsg[response.status]);
         }
+
+        deptModify.addEventListener("submit",async (e)=>{
+            e.preventDefault();
+            const URL="/dept/deptEmp.do";
+            const formData=new FormData(deptModify);
+            const data=Object.fromEntries(formData.entries());
+            //자식 필드에 값을 파싱하고 싶을때
+            // data.dept={
+            //     deptName: data['dept.deptName'],
+            //     deptNo: data.deptNo
+            // };
+            const dataJson=JSON.stringify(data);
+            console.log(dataJson);
+            const resp=await fetch(URL,{
+                method:"PUT",
+                body:dataJson,
+                headers:{"Content-Type":"application/json"},
+            });
+            if(resp.status===204 || resp.status===404){
+                deptModify.classList.add("disabled");
+                deptModify.reset();
+                await loadDept();
+            }
+            alert(httpStatusMsg[resp.status]);
+        });
 
     </script>
 </body>

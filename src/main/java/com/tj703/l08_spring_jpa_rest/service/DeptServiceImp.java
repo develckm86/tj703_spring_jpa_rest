@@ -45,6 +45,28 @@ public class DeptServiceImp implements DeptService {
     }
 
     @Override
+    public void modify(DeptEmp deptEmp) {
+        //영속성 컨텍스트에 데이터를 조회해서 저장
+        //영속성 컨텍스트에 저장된 데이터를 수정하면
+        //트랜잭션이 끝났을때 영속성 컨텍스트가 db 내용을 수정
+        DeptEmpId deptEmpId=new DeptEmpId();
+        deptEmpId.setEmpNo(deptEmp.getEmpNo());
+        deptEmpId.setDeptNo(deptEmp.getDeptNo());
+
+        DeptEmp existDeptEmp=entityManager.find(DeptEmp.class,deptEmpId);
+        //수정할 데이터가 없으면 오류!
+        if(existDeptEmp==null) {throw new IllegalArgumentException();}
+
+        //entityManager.merge(deptEmp);
+        // merge 는 영속성 컨텍스트에 저장된 객체만 매개변수로 받고 수정
+        // 영속성에 저장된 객체에서 바꿔야하는 데이터만 바꾸고
+        existDeptEmp.setFromDate(deptEmp.getFromDate());
+        existDeptEmp.setToDate(deptEmp.getToDate());
+        entityManager.merge(existDeptEmp);
+
+    }
+
+    @Override
     @Transactional
     public DeptEmp save(DeptEmp deptEmp) {
         return deptEmpRepository.save(deptEmp);
