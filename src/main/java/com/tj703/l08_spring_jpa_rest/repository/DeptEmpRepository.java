@@ -7,11 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DeptEmpRepository extends JpaRepository<DeptEmp, DeptEmpId> {
     @EntityGraph(attributePaths = "dept")
     List<DeptEmp> findByEmpNo(int empNo);
+    @EntityGraph(attributePaths = "dept")
+    Optional<DeptEmp> findById(DeptEmpId deptEmpId);
+
+
     //lazy 조회할때 프록시객체를 json 으로 변환하는 문제
     /*
     * responseBody 객체를 json 으로 변환할 때

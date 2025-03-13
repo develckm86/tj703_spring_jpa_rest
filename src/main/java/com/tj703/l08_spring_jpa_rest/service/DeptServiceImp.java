@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -57,5 +58,11 @@ public class DeptServiceImp implements DeptService {
             throw new IllegalArgumentException("삭제할 리소스가 없습니다.");
         }
         deptEmpRepository.deleteById(deptEmpId);
+    }
+
+    @Override
+    public Optional<DeptEmp> readOne(DeptEmpId deptEmpId) {
+        Optional<DeptEmp> readOne=deptEmpRepository.findById(deptEmpId);
+        return readOne;
     }
 }

@@ -4,6 +4,7 @@ import com.tj703.l08_spring_jpa_rest.entity.DeptEmp;
 import com.tj703.l08_spring_jpa_rest.entity.DeptEmpId;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DeptService {
     //사원 상세에세 비동기식으로 조회 :deptEmp.findByEmpNo(int empNo)
@@ -13,4 +14,6 @@ public interface DeptService {
    // void modify(DeptEmp deptEmp);
     DeptEmp save(DeptEmp deptEmp);
     void remove(DeptEmpId deptEmpId);
+
+    Optional<DeptEmp> readOne(DeptEmpId deptEmpId);
 }

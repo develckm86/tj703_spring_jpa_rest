@@ -5,8 +5,10 @@ import com.tj703.l08_spring_jpa_rest.entity.DeptEmpId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -40,5 +42,15 @@ class DeptServiceImpTest {
         deptEmp.setToDate(LocalDate.parse("2024-04-01"));
         deptService.register(deptEmp);
 
+    }
+
+    @Test
+    @Transactional
+    void readOne() {
+        DeptEmpId deptEmpId=new DeptEmpId();
+        deptEmpId.setEmpNo(10001);
+        deptEmpId.setDeptNo("d003");
+        Optional<DeptEmp> deptEmpOpt=deptService.readOne(deptEmpId);
+        System.out.println(deptEmpOpt.get());
     }
 }

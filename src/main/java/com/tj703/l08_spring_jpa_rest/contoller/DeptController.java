@@ -15,10 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequestMapping("/dept")
@@ -73,9 +70,34 @@ public class DeptController {
             return ResponseEntity.status(500).build();
         }
     }
+    //REST API 쓰는 방식만 제공 -> 스프링은 REST API를 지원합니다.
+    //get 방식에서 파라미터를 url에 포함하는 이유?? : url을 공유하기 위해
 
+    @GetMapping("/{empNo}/{deptNo}/deptEmp.do")
+    @ResponseBody
+    public ResponseEntity<DeptEmp> readDeptEmp(
+            @PathVariable int empNo,
+            @PathVariable String deptNo
+    ) {
+        DeptEmpId deptEmpId=new DeptEmpId();
+        deptEmpId.setEmpNo(empNo);
+        deptEmpId.setDeptNo(deptNo);
+        Optional<DeptEmp> deptEmpOpt=deptService.readOne(deptEmpId);
+        //http://localhost:8888/dept/10001/d001/deptEmp.do
+        return deptEmpOpt
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
 
+//        return deptEmpOpt
+//                .map((deptEmp) -> {return ResponseEntity.ok(deptEmp);})
+//                .orElseGet(()->{return ResponseEntity.notFound().build();});
 
+//        if(deptEmpOpt.isPresent()){
+//            return ResponseEntity.status(200).body(deptEmpOpt.get());
+//        }else{
+//            return ResponseEntity.status(404).body(null);
+//        }
+    }
 
     @PostMapping("/register.do")
     public String register(
