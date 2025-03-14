@@ -36,7 +36,9 @@ public class Employee {
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
 
-    @OneToMany(mappedBy = "empNo")
+    @OneToMany(mappedBy = "emp",fetch = FetchType.LAZY)
     private Set<DeptEmp> deptEmps = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "emp",fetch = FetchType.LAZY)
+    private Set<Salary> salaries=new LinkedHashSet<>();
 }

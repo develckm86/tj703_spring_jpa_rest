@@ -45,6 +45,7 @@ public class DeptServiceImp implements DeptService {
     }
 
     @Override
+    @Transactional
     public void modify(DeptEmp deptEmp) {
         //영속성 컨텍스트에 데이터를 조회해서 저장
         //영속성 컨텍스트에 저장된 데이터를 수정하면
