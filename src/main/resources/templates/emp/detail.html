@@ -33,11 +33,70 @@
 <!--    <hr>-->
 <!--    <div th:text="${emp.salaries}"></div>-->
     <h2>급여리스트 불러오기
-        <button>불러오기</button>
-        <button>등록 폼</button>
+        <button id="loadSalaryBtn">불러오기</button>
+        <button id="showSalaryRegisterForm">등록 폼</button>
     </h2>
     <hr>
+    <div id="salaryTableContainer" class="">
+        <h3>급여리스트</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>사원번호</th>
+                    <th>급여</th>
+                    <th>fromDate</th>
+                    <th>toDate</th>
+                </tr>
+            </thead>
+            <tbody id="salaryTbody"></tbody>
+        </table>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br>
+    <hr>
+    <script>
+        const httpStatusMsg={
+            200: "성공",
+            201: "저장 성공",
+            202: "삭제 성공",
+            204: "수정 성공",
+            400: "잘못된 요청",
+            404: "리소스가 없습니다.",
+            409: "이미 리소스가 존재합니다. 저장실패!",
+            500: "서버에 문제가 발생했습니다. 다시시도하세요.",
+            507: "잘못된 리소스를 참조했습니다. 저장 실패!"
+        }
 
+        const NO=[[${emp.id}]];
+        const salaryTableContainer = document.getElementById('salaryTableContainer');
+        const salaryTbody = document.getElementById('salaryTbody');
+        const loadSalaryBtn = document.getElementById('loadSalaryBtn');
+        const showSalaryRegisterForm = document.getElementById('showSalaryRegisterForm');
+
+        const loadSalary=async ()=>{
+            const URL=`/salary/${NO}/read.do`;
+            const resp=await fetch(URL);
+            if (resp.status===200){
+                const data=await resp.json();
+                salaryTableContainer.classList.remove('disabled');
+                let html=``;
+                for(let sal of data){
+                    html+=`<tr>
+                            <td>${sal.empNo}</td>
+                            <td>${sal.salary}</td>
+                            <td>${sal.fromDate}</td>
+                            <td>${sal.toDate}</td>
+                           </tr>`;
+                }
+                salaryTbody.innerHTML=html;
+            }
+            alert(httpStatusMsg[resp.status]);
+        }
+        loadSalaryBtn.onclick=loadSalary;
+
+
+
+
+    </script>
 
 
     <div>
@@ -90,17 +149,6 @@
         const deptRegister=document.getElementById("deptRegister"); //form
         const deptModify=document.getElementById("deptModify");
         const showDeptRegisterBtn=document.getElementById("showDeptRegisterBtn");
-        const httpStatusMsg={
-            200: "성공",
-            201: "저장 성공",
-            202: "삭제 성공",
-            204: "수정 성공",
-            400: "잘못된 요청",
-            404: "리소스가 없습니다.",
-            409: "이미 리소스가 존재합니다. 저장실패!",
-            500: "서버에 문제가 발생했습니다. 다시시도하세요.",
-            507: "잘못된 리소스를 참조했습니다. 저장 실패!"
-        }
 
 
         showDeptRegisterBtn.addEventListener("click",()=>{
