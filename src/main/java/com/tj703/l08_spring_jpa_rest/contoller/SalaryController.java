@@ -4,6 +4,8 @@ import com.tj703.l08_spring_jpa_rest.entity.Salary;
 import com.tj703.l08_spring_jpa_rest.entity.SalaryId;
 import com.tj703.l08_spring_jpa_rest.service.SalaryService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SalaryController {
     private final SalaryService salaryService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //리스트조회 GET "/salary/empNo/read.do"
     //상세조회 GET "/salary/empNo<=10001/fromDate<=2000-01-01/read.do"
@@ -48,7 +52,57 @@ public class SalaryController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    //{"empNo":10001} ->@RequestBody
+    //?empNo=10001 ->@ModelAttribute
+    @PutMapping("/action.do")
+    public ResponseEntity<Void> modifyAction(
+            @RequestBody Salary salary
+    ){
+        //logger.info(salary.toString());
+        try {
+            salaryService.modify(salary);
+        }catch (IllegalArgumentException e){ //수정할 리소스가 없다.
+            logger.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.status(204).build();
+    }
 
+    @DeleteMapping("/action.do")
+    public ResponseEntity<Void> deleteAction(
+            @RequestBody SalaryId salaryId
+    ){
+        try {
+            salaryService.remove( salaryId );
+        }catch (IllegalArgumentException e){
+            logger.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.status(202).build();
+    }
+
+    @PostMapping("/action.do")
+    public ResponseEntity<Void> createAction(
+            @RequestBody Salary salary
+    ){
+        try {
+            salaryService.register(salary);
+        }catch (IllegalArgumentException e){
+            logger.error(e.getMessage());
+            return ResponseEntity.status(409).build();
+            //409: 충돌오류(이미 존재하는 리소스를 다시 등록하려할때)
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.status(201).build();
+    }
 
 
 

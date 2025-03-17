@@ -37,6 +37,24 @@
         <button id="showSalaryRegisterForm">등록 폼</button>
     </h2>
     <hr>
+    <div id="salaryModifyContainer">
+
+    </div>
+    <hr>
+    <div>
+        <h3>급여 등록 양식</h3>
+        <form name="registerSalaryForm">
+            <p><label>사원번호<input name="empNo" th:value="${emp.id}" type="text" readonly></label></p>
+            <p><label>fromDate<input name="fromDate" value="" type="date"></label></p>
+            <p><label>toDate<input name="toDate" value="" type="date"></label></p>
+            <p><label>급여<input name="salary" value="" type="number"></label></p>
+            <p>
+                <button type="reset">초기화</button>
+                <button type="submit">등록</button>
+            </p>
+        </form>
+    </div>
+    <hr>
     <div id="salaryTableContainer" class="">
         <h3>급여리스트</h3>
         <table>
@@ -46,6 +64,8 @@
                     <th>급여</th>
                     <th>fromDate</th>
                     <th>toDate</th>
+                    <th>수정</th>
+                    <th>삭제</th>
                 </tr>
             </thead>
             <tbody id="salaryTbody"></tbody>
@@ -71,6 +91,23 @@
         const salaryTbody = document.getElementById('salaryTbody');
         const loadSalaryBtn = document.getElementById('loadSalaryBtn');
         const showSalaryRegisterForm = document.getElementById('showSalaryRegisterForm');
+        const salaryModifyContainer = document.getElementById('salaryModifyContainer');
+        const registerSalaryForm = document.forms['registerSalaryForm'];
+
+        registerSalaryForm.addEventListener('submit',async function(e){
+            e.preventDefault();
+            const formData=Object.fromEntries(new FormData(e.target).entries());
+            const URL="/salary/action.do";
+            const resp=await fetch(URL,{
+                method:'POST',
+                headers:{'content-type':'application/json'},
+                body:JSON.stringify(formData)
+            });
+            alert(httpStatusMsg[resp.status]);
+            if(resp.status===201){
+                await loadSalary();
+            }
+        });
 
         const loadSalary=async ()=>{
             const URL=`/salary/${NO}/read.do`;
@@ -85,15 +122,90 @@
                             <td>${sal.salary}</td>
                             <td>${sal.fromDate}</td>
                             <td>${sal.toDate}</td>
+                            <td>
+                                <button onclick="modifySalary(${sal.empNo},'${sal.fromDate}');">수정</button>
+                            </td>
+                            <td>
+                                <button onclick="removeSalary(${sal.empNo},'${sal.fromDate}');">삭제</button>
+                            </td>
                            </tr>`;
+                    // const btn=document.createElement('button');
+                    // btn.onclick=()=>{modifySalary(sal.empNo,sal.fromDate);}
                 }
                 salaryTbody.innerHTML=html;
             }
             alert(httpStatusMsg[resp.status]);
         }
         loadSalaryBtn.onclick=loadSalary;
+        const modifySalary=async (empNo,fromDate)=>{
+            const URL=`/salary/${empNo}/${fromDate}/read.do`; //상세조회
+            const resp=await fetch(URL);
+            if(resp.status===200){
+                const data=await resp.json();
+
+                let html=`
+                    <h3>급여 수정 양식</h3>
+                    <form name="modifySalaryForm" onsubmit="modifySalaryFormHandler(event)">
+                        <p><label>사원번호<input name="empNo" value="${data.empNo}" type="text" readonly></label></p>
+                        <p><label>fromDate<input name="fromDate" value="${data.fromDate}" type="text" readonly></label></p>
+                        <p><label>toDate<input name="toDate" value="${data.toDate}" type="date"></label></p>
+                        <p><label>급여<input name="salary" value="${data.salary}" type="number"></label></p>
+                        <p>
+                            <button type="reset">초기화</button>
+                            <button type="submit">수정</button>
+                        </p>
+                    </form>
+                `;
+                salaryModifyContainer.innerHTML=html;
+            }
+            alert(httpStatusMsg[resp.status]);
+        };
+        const modifySalaryFormHandler=async (e)=>{
+            e.preventDefault();
+            const form=e.target;
+            const formData=new FormData(form);
+            const formDataObj=Object.fromEntries(formData.entries());
+            console.log(formDataObj);
+            const URL="/salary/action.do";
+            const resp=await fetch(URL,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(formDataObj)
+            });
+            alert(httpStatusMsg[resp.status]);
+            if(resp.status===204 || resp.status===404){
+                //수정성공하거나 수정할 리소스가 없으면 리스트 새로고침 및 수정양식 삭제
+                salaryModifyContainer.innerHTML="";
+                await loadSalary();
+            }
+        }
 
 
+
+        const removeSalary=async (empNo,fromDate)=>{
+            const URL="/salary/action.do";
+            const obj={
+                "empNo":empNo,
+                "fromDate":fromDate,
+            }
+            const resp=await fetch(URL,{
+                method:"DELETE",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(obj)
+            })
+            alert(httpStatusMsg[resp.status]);
+            if(resp.status===202 || resp.status===404){
+                await loadSalary();
+            }
+        }
+
+
+
+
+        //modifySalaryForm 은 비동기식으로 나중에 로딩되기 때문에 onsubmit 이 정의 되지 않은 html이 로딩된다.
+        // modifySalaryForm.onsubmit = async (e)=>{
+        //     e.preventDefault();
+        // }
 
 
     </script>
