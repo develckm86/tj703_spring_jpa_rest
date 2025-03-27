@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class EmpServiceImp implements EmpService {
     }
 
     @Override
+    @Transactional
     public void modify(Employee employee) {
         Employee emp=entityManager.find(Employee.class, employee.getId());
         if(emp==null){
@@ -54,6 +56,7 @@ public class EmpServiceImp implements EmpService {
     }
 
     @Override
+    @Transactional
     public void remove(int empNo) {
         Employee emp=entityManager.find(Employee.class, empNo);
         if(emp==null){

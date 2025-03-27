@@ -1,6 +1,7 @@
 package com.tj703.l08_spring_jpa_rest.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,8 +23,8 @@ public class Employee {
     @Column(name = "emp_no", nullable = false)
     private Integer id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     @Column(name = "birth_date", nullable = false)
-    @JsonIgnore
     private LocalDate birthDate;
 
     @Column(name = "first_name", nullable = false, length = 100)
@@ -36,8 +37,8 @@ public class Employee {
     @Column(name = "gender", nullable = false)
     private String gender;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     @Column(name = "hire_date", nullable = false)
-    @JsonIgnore
     private LocalDate hireDate;
 
     @OneToMany(mappedBy = "emp",fetch = FetchType.LAZY)
