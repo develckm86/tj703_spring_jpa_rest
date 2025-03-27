@@ -2,6 +2,7 @@ package com.tj703.l08_spring_jpa_rest.service;
 
 import com.tj703.l08_spring_jpa_rest.entity.Employee;
 import com.tj703.l08_spring_jpa_rest.repository.EmployRepository;
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,5 @@ public class EmpServiceImp implements EmpService {
     public Page<Employee> readAll(Pageable pageable) {
         return empRepository.findAll(pageable);
     }
+
 }

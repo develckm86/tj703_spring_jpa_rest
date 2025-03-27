@@ -14,5 +14,4 @@ public interface EmpService {
     //사원 리스트 페이징
 
     Page<Employee> readAll(Pageable pageable);
-
 }
