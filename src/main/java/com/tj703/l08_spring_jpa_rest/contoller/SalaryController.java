@@ -18,6 +18,8 @@ import java.util.Optional;
 // 예외로 @ResponseBody 를 작성하면 뷰를 렌더링하지 않고 반환하는 객체를 json으로 변환
 @RestController //기본값이 @ResponseBody, 뷰를 렌더링하지 못함
 @RequestMapping("/salary")
+@CrossOrigin(value = "http://localhost:3000")
+//리소스 쉐어를 허용하는 서버 추가
 @AllArgsConstructor
 public class SalaryController {
     private final SalaryService salaryService;
