@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SalaryRepository extends JpaRepository<Salary, SalaryId> {
-
     List<Salary> findByEmpNo(int empNo);
 
 }

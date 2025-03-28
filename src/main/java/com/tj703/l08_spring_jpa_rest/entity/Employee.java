@@ -39,8 +39,12 @@ public class Employee {
     private LocalDate hireDate;
 
     @OneToMany(mappedBy = "emp",fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ToString.Exclude
     private Set<DeptEmp> deptEmps = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "emp",fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ToString.Exclude
     private Set<Salary> salaries=new LinkedHashSet<>();
 }
