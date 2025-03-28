@@ -64,4 +64,9 @@ public class EmpServiceImp implements EmpService {
         }
         entityManager.remove(emp);
     }
+
+    @Override
+    public boolean exists(int empNo) {
+        return empRepository.existsById(empNo);
+    }
 }

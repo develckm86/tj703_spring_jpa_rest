@@ -17,4 +17,5 @@ public interface EmpService {
     void register(Employee employee);
     void modify(Employee employee);
     void remove(int empNo);
+    boolean exists(int empNo);
 }

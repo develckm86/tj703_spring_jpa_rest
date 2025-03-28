@@ -70,4 +70,9 @@ public class EmpRestController {
             return ResponseEntity.internalServerError().build();
         }
     }
+    @GetMapping("/{empNo}/exist")
+    public ResponseEntity<Boolean> exist(@PathVariable int empNo) {
+        boolean exist=empService.exists(empNo);
+        return ResponseEntity.ok(exist);
+    }
 }
