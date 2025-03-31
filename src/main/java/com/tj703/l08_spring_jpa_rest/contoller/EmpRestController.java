@@ -3,7 +3,9 @@ package com.tj703.l08_spring_jpa_rest.contoller;
 import com.tj703.l08_spring_jpa_rest.entity.Employee;
 import com.tj703.l08_spring_jpa_rest.service.EmpService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -71,8 +75,10 @@ public class EmpRestController {
         }
     }
     @GetMapping("/{empNo}/exist")
-    public ResponseEntity<Boolean> exist(@PathVariable int empNo) {
+    public ResponseEntity<Map<String,Boolean>> exist(@PathVariable int empNo) {
         boolean exist=empService.exists(empNo);
-        return ResponseEntity.ok(exist);
+        Map<String,Boolean> map=new HashMap<>();
+        map.put("exist",exist);
+        return ResponseEntity.ok(map);
     }
 }
