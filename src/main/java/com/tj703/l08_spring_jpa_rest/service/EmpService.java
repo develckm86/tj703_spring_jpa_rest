@@ -10,8 +10,12 @@ import java.util.Optional;
 public interface EmpService {
     //사원 상세 페이지 emp.findById(int empNo)
     Optional<Employee> readOne(int empNo);
-
     //사원 리스트 페이징
-
     Page<Employee> readAll(Pageable pageable);
+
+    void modify(Employee employee);
+    void register(Employee employee);
+    void remove(int empNo);
+    boolean exists(int empNo);
+
 }
