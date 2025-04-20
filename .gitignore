@@ -1,4 +1,5 @@
-#src/main/resources/application-dev_db.yaml
+src/main/resources/application-dev_db.yaml
+src/main/resources/application-deploy.yaml
 
 HELP.md
 .gradle
